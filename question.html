@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gender Check Questions</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .question {
+      margin-bottom: 15px;
+    }
+    .submit-btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .submit-btn:hover {
+      background-color: #0b7dda;
+    }
+  </style>
+</head>
+<body>
+  <h2>Answer the questions</h2>
+  <form id="quizForm">
+    <div class="question">1. Do you enjoy action movies?<br>
+      <input type="radio" name="q1" value="male"> Yes
+      <input type="radio" name="q1" value="female"> No
+    </div>
+    <div class="question">2. Do you prefer shopping over sports?<br>
+      <input type="radio" name="q2" value="female"> Yes
+      <input type="radio" name="q2" value="male"> No
+    </div>
+    <div class="question">3. Are you more emotional than logical?<br>
+      <input type="radio" name="q3" value="female"> Yes
+      <input type="radio" name="q3" value="male"> No
+    </div>
+    <!-- Repeat for up to 10 questions -->
+    <div class="question">4. Do you like fixing things?<br>
+      <input type="radio" name="q4" value="male"> Yes
+      <input type="radio" name="q4" value="female"> No
+    </div>
+    <div class="question">5. Do you care about fashion?<br>
+      <input type="radio" name="q5" value="female"> Yes
+      <input type="radio" name="q5" value="male"> No
+    </div>
+    <div class="question">6. Do you enjoy tech gadgets?<br>
+      <input type="radio" name="q6" value="male"> Yes
+      <input type="radio" name="q6" value="female"> No
+    </div>
+    <div class="question">7. Do you cry often while watching movies?<br>
+      <input type="radio" name="q7" value="female"> Yes
+      <input type="radio" name="q7" value="male"> No
+    </div>
+    <div class="question">8. Do you prefer group chats over games?<br>
+      <input type="radio" name="q8" value="female"> Yes
+      <input type="radio" name="q8" value="male"> No
+    </div>
+    <div class="question">9. Do you play video games frequently?<br>
+      <input type="radio" name="q9" value="male"> Yes
+      <input type="radio" name="q9" value="female"> No
+    </div>
+    <div class="question">10. Do you enjoy makeup tutorials?<br>
+      <input type="radio" name="q10" value="female"> Yes
+      <input type="radio" name="q10" value="male"> No
+    </div>
+    <button type="submit" class="submit-btn">Submit & Continue</button>
+  </form>
+
+  <script>
+    document.getElementById("quizForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      let form = event.target;
+      let male = 0, female = 0;
+      for (let i = 1; i <= 10; i++) {
+        let ans = form["q" + i].value;
+        if (ans === "male") male++;
+        else if (ans === "female") female++;
+      }
+      // Save score to session
+      sessionStorage.setItem("maleScore", male);
+      sessionStorage.setItem("femaleScore", female);
+      alert(`Male: ${male}, Female: ${female}`);
+      // Redirect to gender selection (you’ll create this next)
+      window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html>
+
