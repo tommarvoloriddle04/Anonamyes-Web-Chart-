@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quick Personality Match</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #container {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 400px;
+    }
+    h2 {
+      margin-bottom: 30px;
+    }
+    .option-btn {
+      display: block;
+      margin: 10px auto;
+      padding: 15px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #3498db;
+      color: white;
+      transition: 0.3s;
+    }
+    .option-btn:hover {
+      background-color: #2980b9;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <h2 id="question">Loading...</h2>
+    <button class="option-btn" onclick="answer(0)">Option 1</button>
+    <button class="option-btn" onclick="answer(1)">Option 2</button>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        q: "🎮 Which sounds more fun?",
+        options: ["Fixing a drone", "Designing an outfit"],
+        score: ["male", "female"]
+      },
+      {
+        q: "🧠 Weekend mood?",
+        options: ["Gaming marathon", "Deep convo with friends"],
+        score: ["male", "female"]
+      },
+      {
+        q: "🎵 What’s your jam?",
+        options: ["Rock or EDM", "K-pop or Lo-fi"],
+        score: ["male", "female"]
+      },
+      {
+        q: "🧩 Choose one:",
+        options: ["Strategy + challenge", "Harmony + vibe"],
+        score: ["male", "female"]
+      },
+      {
+        q: "🚗 Dream day?",
+        options: ["Road trip + adrenaline", "Cafe hopping + photos"],
+        score: ["male", "female"]
+      },
+      {
+        q: "💬 In a group chat...",
+        options: ["Send memes + short texts", "Write thoughtful replies"],
+        score: ["male", "female"]
+      },
+      {
+        q: "📺 What type of shows?",
+        options: ["Sci-fi, crime", "Drama, romance"],
+        score: ["male", "female"]
+      },
+      {
+        q: "🎨 Which is more you?",
+        options: ["Logical and practical", "Creative and intuitive"],
+        score: ["male", "female"]
+      },
+      {
+        q: "🎯 Pick a hobby",
+        options: ["Coding", "Painting"],
+        score: ["male", "female"]
+      },
+      {
+        q: "🌍 Preferred weekend plan?",
+        options: ["Bike ride solo", "Hang out in group"],
+        score: ["male", "female"]
+      }
+    ];
+
+    let currentQ = 0;
+    let maleScore = 0;
+    let femaleScore = 0;
+    let maxQ = 10; // Ask up to 10 questions
+
+    const qEl = document.getElementById("question");
+    const btns = document.getElementsByClassName("option-btn");
+
+    function loadQuestion() {
+      if (currentQ >= maxQ) {
+        // Final forced result
+        if (maleScore > femaleScore) finish("male");
+        else if (femaleScore > maleScore) finish("female");
+        else askUserToChoose(); // balanced
+        return;
+      }
+
+      const q = questions[currentQ];
+      qEl.textContent = q.q;
+      btns[0].textContent = q.options[0];
+      btns[1].textContent = q.options[1];
+    }
+
+    function answer(selected) {
+      const scoreType = questions[currentQ].score[selected];
+      if (scoreType === "male") maleScore++;
+      else if (scoreType === "female") femaleScore++;
+
+      currentQ++;
+
+      // Early finish if confidence reached within 6
+      if (currentQ >= 6) {
+        if (maleScore >= 4) return finish("male");
+        if (femaleScore >= 4) return finish("female");
+      }
+
+      loadQuestion();
+    }
+
+    function finish(result) {
+      sessionStorage.setItem("predictedGender", result);
+      alert(`🎉 Match found: ${result.toUpperCase()} personality`);
+      window.location.href = "login.html";
+    }
+
+    function askUserToChoose() {
+      qEl.textContent = "🤔 You have a balanced personality. Choose how you'd like to continue:";
+      btns[0].textContent = "Continue as Male";
+      btns[1].textContent = "Continue as Female";
+      btns[0].onclick = () => finish("male");
+      btns[1].onclick = () => finish("female");
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
+
