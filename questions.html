@@ -86,9 +86,28 @@
       sessionStorage.setItem("femaleScore", female);
       alert(`Male: ${male}, Female: ${female}`);
       // Redirect to gender selection (you’ll create this next)
-      window.location.href = "index.html";
+      window.location.href = "login.html";
     });
   </script>
 </body>
 </html>
+document.getElementById("quizForm").addEventListener("submit", function(event) {
+  event.preventDefault();
+  let form = event.target;
+  let male = 0, female = 0;
+  for (let i = 1; i <= 10; i++) {
+    let ans = form["q" + i].value;
+    if (ans === "male") male++;
+    else if (ans === "female") female++;
+  }
+
+  sessionStorage.setItem("maleScore", male);
+  sessionStorage.setItem("femaleScore", female);
+
+  alert(`Male: ${male}, Female: ${female}`);
+  
+  // 🔽 THIS LINE MUST EXIST
+  window.location.href = "login.html";
+});
+
 
