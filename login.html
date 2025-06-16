@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gender Verification</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding-top: 60px;
+    }
+    h2 {
+      margin-bottom: 30px;
+    }
+    .btn {
+      padding: 12px 24px;
+      margin: 10px;
+      font-size: 18px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+    }
+    .btn:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h2>Select Your Gender</h2>
+  <button class="btn" onclick="verifyGender('male')">Male</button>
+  <button class="btn" onclick="verifyGender('female')">Female</button>
+
+  <script>
+    function verifyGender(selected) {
+      let maleScore = parseInt(sessionStorage.getItem("maleScore")) || 0;
+      let femaleScore = parseInt(sessionStorage.getItem("femaleScore")) || 0;
+
+      if (selected === "male" && maleScore >= 6) {
+        alert("✅ Access granted as Male");
+        // Redirect to male chat or next step
+      } else if (selected === "female" && femaleScore >= 6) {
+        alert("✅ Access granted as Female");
+        // Redirect to female chat or next step
+      } else {
+        alert("❌ Gender mismatch based on your answers.\nPlease retake the questions.");
+        window.location.href = "questions.html";
+      }
+    }
+  </script>
+</body>
+</html>
+
