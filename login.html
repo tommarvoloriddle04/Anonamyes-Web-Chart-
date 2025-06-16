@@ -2,53 +2,67 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Gender Verification</title>
+  <title>Confirm Your Identity</title>
   <style>
     body {
       font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #box {
+      background: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
       text-align: center;
-      padding-top: 60px;
+      width: 90%;
+      max-width: 400px;
     }
     h2 {
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
     .btn {
       padding: 12px 24px;
       margin: 10px;
-      font-size: 18px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
       cursor: pointer;
       background-color: #4CAF50;
       color: white;
-      border: none;
-      border-radius: 6px;
+      transition: 0.3s;
     }
     .btn:hover {
-      background-color: #45a049;
+      background-color: #388e3c;
     }
   </style>
 </head>
 <body>
-  <h2>Select Your Gender</h2>
-  <button class="btn" onclick="verifyGender('male')">Male</button>
-  <button class="btn" onclick="verifyGender('female')">Female</button>
+  <div id="box">
+    <h2 id="msg">Loading...</h2>
+    <button class="btn" onclick="finalize('male')">Continue as Male</button>
+    <button class="btn" onclick="finalize('female')">Continue as Female</button>
+  </div>
 
   <script>
-    function verifyGender(selected) {
-      let maleScore = parseInt(sessionStorage.getItem("maleScore")) || 0;
-      let femaleScore = parseInt(sessionStorage.getItem("femaleScore")) || 0;
+    const result = sessionStorage.getItem("predictedGender");
 
-      if (selected === "male" && maleScore >= 6) {
-        alert("✅ Access granted as Male");
-        // Redirect to male chat or next step
-      } else if (selected === "female" && femaleScore >= 6) {
-        alert("✅ Access granted as Female");
-        // Redirect to female chat or next step
-      } else {
-        alert("❌ Gender mismatch based on your answers.\nPlease retake the questions.");
-        window.location.href = "questions.html";
-      }
+    const msg = document.getElementById("msg");
+    if (result === "male" || result === "female") {
+      msg.textContent = `We think you're likely ${result.toUpperCase()}. Do you want to continue as that?`;
+    } else {
+      msg.textContent = "Welcome! Please select how you identify to proceed:";
+    }
+
+    function finalize(choice) {
+      sessionStorage.setItem("finalGender", choice);
+      alert(`✅ Identity set as: ${choice.toUpperCase()}`);
+      // Proceed to next step (e.g., room selection)
+      window.location.href = "room.html"; // replace with next page
     }
   </script>
 </body>
 </html>
-
