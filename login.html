@@ -33,10 +33,24 @@
       cursor: pointer;
       background-color: #4CAF50;
       color: white;
-      transition: 0.3s;
     }
     .btn:hover {
       background-color: #388e3c;
+    }
+    .funny {
+      font-size: 22px;
+      margin-top: 30px;
+      display: none;
+    }
+    .shake {
+      animation: shake 0.5s;
+    }
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      50% { transform: translateX(10px); }
+      75% { transform: translateX(-10px); }
+      100% { transform: translateX(0); }
     }
   </style>
 </head>
@@ -45,24 +59,38 @@
     <h2 id="msg">Loading...</h2>
     <button class="btn" onclick="finalize('male')">Continue as Male</button>
     <button class="btn" onclick="finalize('female')">Continue as Female</button>
+    <div class="funny" id="funny">🕵️ You thought you could trick the system? Try again 😂</div>
   </div>
 
   <script>
-    const result = sessionStorage.getItem("predictedGender");
-
+    const predicted = sessionStorage.getItem("predictedGender");
     const msg = document.getElementById("msg");
-    if (result === "male" || result === "female") {
-      msg.textContent = `We think you're likely ${result.toUpperCase()}. Do you want to continue as that?`;
+    const funny = document.getElementById("funny");
+
+    if (predicted === "male" || predicted === "female") {
+      msg.textContent = `We think you're likely ${predicted.toUpperCase()}. Do you want to continue as that?`;
     } else {
-      msg.textContent = "Welcome! Please select how you identify to proceed:";
+      msg.textContent = "You seem balanced. Choose how you want to continue:";
     }
 
     function finalize(choice) {
+      if (predicted === "male" && choice === "female") return blockRedirect();
+      if (predicted === "female" && choice === "male") return blockRedirect();
+
+      // Allow and proceed
       sessionStorage.setItem("finalGender", choice);
       alert(`✅ Identity set as: ${choice.toUpperCase()}`);
-      // Proceed to next step (e.g., room selection)
-      window.location.href = "room.html"; // replace with next page
+      window.location.href = "room.html"; // or your next page
+    }
+
+    function blockRedirect() {
+      funny.style.display = "block";
+      document.getElementById("box").classList.add("shake");
+      setTimeout(() => {
+        window.location.href = "adaptive-questions.html";
+      }, 2500);
     }
   </script>
 </body>
 </html>
+
