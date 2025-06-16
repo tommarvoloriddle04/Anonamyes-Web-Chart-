@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quick Personality Match</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #container {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+    }
+    h2 {
+      margin-bottom: 30px;
+    }
+    .option-btn {
+      display: block;
+      margin: 10px auto;
+      padding: 15px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #3498db;
+      color: white;
+      transition: 0.3s;
+      width: 100%;
+    }
+    .option-btn:hover {
+      background-color: #2980b9;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <h2 id="question">Loading...</h2>
+    <button class="option-btn" onclick="answer(0)">Option A</button>
+    <button class="option-btn" onclick="answer(1)">Option B</button>
+    <button class="option-btn" onclick="answer(2)">Option C</button>
+  </div>
+
+  <script>
+    // 📦 Sample Question Pool (real pool = 500+)
+    const fullPool = [
+      {
+        q: "Go-to shoe: sneakers, boots, loafers?",
+        options: ["sneakers", "boots", "loafers"],
+        scoreMap: ["male", "male", "female"]
+      },
+      {
+        q: "Preferred watch face?",
+        options: ["Analog", "Digital"],
+        scoreMap: ["male", "female"]
+      },
+      {
+        q: "Signature scent:",
+        options: ["Floral", "Woody", "Fresh"],
+        scoreMap: ["female", "male", "neutral"]
+      },
+      {
+        q: "Graphic tee or plain solid tee?",
+        options: ["Graphic", "Plain"],
+        scoreMap: ["male", "female"]
+      },
+      {
+        q: "Color you avoid wearing?",
+        options: ["Pink", "Black", "Brown"],
+        scoreMap: ["male", "neutral", "female"]
+      },
+      {
+        q: "Most owned shoe color?",
+        options: ["White", "Black", "Colorful"],
+        scoreMap: ["neutral", "male", "female"]
+      },
+      {
+        q: "Do you cuff your jeans?",
+        options: ["Yes", "No"],
+        scoreMap: ["female", "male"]
+      },
+      {
+        q: "Confidence booster?",
+        options: ["Fresh haircut", "Heels"],
+        scoreMap: ["male", "female"]
+      },
+      {
+        q: "Do you thrift regularly?",
+        options: ["Yes", "No"],
+        scoreMap: ["female", "male"]
+      },
+      {
+        q: "First accessory you choose daily?",
+        options: ["Watch", "Rings", "Bag"],
+        scoreMap: ["male", "female", "neutral"]
+      }
+    ];
+
+    // 🧠 Shuffle and pick 10 random questions
+    function shuffleArray(arr) {
+      return arr.sort(() => Math.random() - 0.5);
+    }
+
+    const questionPool = shuffleArray(fullPool).slice(0, 10);
+    let currentQ = 0;
+    let maleScore = 0;
+    let femaleScore = 0;
+
+    const qEl = document.getElementById("question");
+    const btns = document.getElementsByClassName("option-btn");
+
+    function loadQuestion() {
+      const q = questionPool[currentQ];
+      qEl.textContent = q.q;
+
+      // Update visible buttons
+      for (let i = 0; i < 3; i++) {
+        if (q.options[i]) {
+          btns[i].style.display = "block";
+          btns[i].textContent = q.options[i];
+        } else {
+          btns[i].style.display = "none";
+        }
+      }
+    }
+
+    function answer(selected) {
+      const scoreType = questionPool[currentQ].scoreMap[selected];
+
+      if (scoreType === "male") maleScore++;
+      else if (scoreType === "female") femaleScore++;
+      // neutral = no change
+
+      currentQ++;
+
+      // Early prediction if 4 out of 6
+      if (currentQ >= 6) {
+        if (maleScore >= 4) return finish("male");
+        if (femaleScore >= 4) return finish("female");
+      }
+
+      if (currentQ >= questionPool.length) {
+        if (maleScore > femaleScore) return finish("male");
+        if (femaleScore > maleScore) return finish("female");
+        return askUserToChoose(); // balanced
+      }
+
+      loadQuestion();
+    }
+
+    function finish(result) {
+      sessionStorage.setItem("predictedGender", result);
+      alert(`🎯 Match found: ${result.toUpperCase()}`);
+      window.location.href = "login.html";
+    }
+
+    function askUserToChoose() {
+      qEl.textContent = "You're balanced in traits. Choose how you'd like to continue:";
+      btns[0].style.display = "block";
+      btns[1].style.display = "block";
+      btns[2].style.display = "none";
+
+      btns[0].textContent = "Continue as Male";
+      btns[1].textContent = "Continue as Female";
+
+      btns[0].onclick = () => finish("male");
+      btns[1].onclick = () => finish("female");
+    }
+
+    // Start
+    loadQuestion();
+  </script>
+</body>
+</html>
+
